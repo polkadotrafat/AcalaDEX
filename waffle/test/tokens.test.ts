@@ -8,6 +8,7 @@ import { createTestPairs } from "@polkadot/keyring/testingPairs";
 import IERC20 from "../build/IERC20.json";
 import DEX from "../build/Dex.json";
 
+use(solidity);
 use(evmChai);
 
 const DOT_ERC20_ADDRESS = '0x0000000000000000000000000000000000000802';
@@ -60,7 +61,7 @@ describe("Tokens", () => {
     console.log(wallet);
     console.log(DEX);
     console.log(IERC20);
-    DOT = new ethers.Contract(DOT_ERC20_ADDRESS, IERC20, wallet);
+    DOT = new ethers.Contract(DOT_ERC20_ADDRESS, IERC20.abi, wallet);
   });
   
   after(async () => {
