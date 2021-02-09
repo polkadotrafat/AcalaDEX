@@ -58,9 +58,9 @@ describe("Tokens", () => {
   
   before(async () => {
     [wallet, walletTo] = await getWallets();
-    console.log(wallet);
-    console.log(DEX);
-    console.log(IERC20);
+    //console.log(wallet);
+    //console.log(DEX);
+    //console.log(IERC20);
     DOT = new ethers.Contract(DOT_ERC20_ADDRESS, IERC20.abi, wallet);
   });
   
@@ -73,6 +73,6 @@ describe("Tokens", () => {
     const wAddress = await wallet.getAddress();
     console.log(wAddress);
     const balance = await DOT.balanceOf(wAddress);
-    console.log(balance);
+    console.log(balance.toString());
   });
 });
