@@ -213,17 +213,45 @@ describe("Tokens", () => {
 
     let offers;
 
-        if (parseInt(offerSize.toString()) > 0) {
-            console.log("Order Book");
+    if (parseInt(offerSize.toString()) > 0) {
+        console.log("Order Book");
+        offers = await Exchange.getOfferPerId(offerId);
+        console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
+
+        for(let i = 1; i < parseInt(offerSize.toString()); ++i) {
+            offerId = await Exchange.getPrevOffer(offerId);
             offers = await Exchange.getOfferPerId(offerId);
             console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
-
-            for(let i = 1; i < parseInt(offerSize.toString()); ++i) {
-                offerId = await Exchange.getPrevOffer(offerId);
-                offers = await Exchange.getOfferPerId(offerId);
-                console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
-            }
         }
+    }
+
+    // Account 2 creates multiple DOT/ACA orders 
+
+    sellAmount = "585000000000000000000";
+
+    await DOT2.approve(exchangeAddress,sellAmount);
+
+    sellAmount1 = "300000000000000000000";
+    buyAmount1 = "150000000000000000000";
+
+    let txTrade2 = await Exchange.tradeOffer(DOT_ERC20_ADDRESS,sellAmount1,ACA_ERC20_ADDRESS,buyAmount1);
+
+    sellAmount2 = "160000000000000000000";
+    buyAmount2 = "80000000000000000000";
+
+    txTrade2 = await Exchange.tradeOffer(DOT_ERC20_ADDRESS,sellAmount2,ACA_ERC20_ADDRESS,buyAmount2);
+    
+    sellAmount3 = "125000000000000000000";
+    buyAmount3 = "50000000000000000000";
+
+    txTrade2 = await Exchange.tradeOffer(DOT_ERC20_ADDRESS,sellAmount3,ACA_ERC20_ADDRESS,buyAmount3);
+
+    offerSize = await Exchange.getOfferSize(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
+
+    offerId = await Exchange.getBestOffer(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
+
+    expect(offerSize.toString(),"1");
+    expect(offerId.toString(), "3");
 
   });
 });
