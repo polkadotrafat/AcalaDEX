@@ -178,7 +178,7 @@ describe("Tokens", () => {
   });
   
   it("Trading Test", async () => {
-	let numTokens = await Exchange.getTotalTokens();
-	console.log(numTokens.toString());
+    let sellAmount = "300000000000000000000";
+
   });
 });
