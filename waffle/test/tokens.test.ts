@@ -18,7 +18,6 @@ const DOT_ERC20_ADDRESS = '0x0000000000000000000000000000000000000802';
 const XBTC_ERC20_ADDRESS = '0x0000000000000000000000000000000000000803';
 const LDOT_ERC20_ADDRESS = '0x0000000000000000000000000000000000000804';
 const RENBTC_ERC20_ADDRESS = '0x0000000000000000000000000000000000000805';
-let RTOK_ERC20_ADDRESS = '';
 
 const provider = new Provider({
   provider: new WsProvider("ws://127.0.0.1:9944"),
@@ -59,6 +58,7 @@ const getWallets = async () => {
 describe("Tokens", () => {
   let wallet1: Signer;
   let wallet2: Signer;
+  let walletexchange: Signer;
   let DOT: Contract;
   let ACA: Contract;
   let AUSD: Contract;
@@ -66,9 +66,10 @@ describe("Tokens", () => {
   let LDOT: Contract;
   let RENBTC: Contract;
   let RTOK: Contract;
+  let Exchange: Contract;
   
   before(async () => {
-    [wallet1, wallet2] = await getWallets();
+    [wallet1, wallet2, walletexchange] = await getWallets();
     DOT = new ethers.Contract(DOT_ERC20_ADDRESS, IERC20.abi, wallet1);
     ACA = new ethers.Contract(ACA_ERC20_ADDRESS, IERC20.abi, wallet1);
     AUSD = new ethers.Contract(AUSD_ERC20_ADDRESS, IERC20.abi, wallet1);
@@ -77,6 +78,7 @@ describe("Tokens", () => {
     RENBTC = new ethers.Contract(RENBTC_ERC20_ADDRESS, IERC20.abi, wallet1);
     const supply = BigNumber.from('1000000000000000000000000');
     RTOK = await deployContract(wallet1, RTOKABI, [supply] );
+    Exchange = await deplyContract(walletexchange, DEX);
   });
   
   after(async () => {
@@ -128,5 +130,14 @@ describe("Tokens", () => {
     expect(rtokBalance.toString()).to.equal('999000000000000000000000');
     rtokBalance = await RTOK.balanceOf(wAddress2);
     expect(rtokBalance.toString()).to.equal('1000000000000000000000');
-  })
+  });
+
+  it("Pair Tests", async () => {
+    const exchangeAddress = Exchange.address;
+
+    const txAddedACA = await Exchange.addToken(ACA_ERC20_ADDRESS,"ACALA","ACA");
+    console.log(txAddedACA);
+    const txAddedDOT = await Exchange.addToken(DOT_ERC20_ADDRESS,"Polkadot","DOT");
+    console.log(txAddedDOT);
+  });
 });
