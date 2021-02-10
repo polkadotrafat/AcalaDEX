@@ -75,6 +75,7 @@ describe("Tokens", () => {
     XBTC = new ethers.Contract(XBTC_ERC20_ADDRESS, IERC20.abi, wallet1);
     LDOT = new ethers.Contract(LDOT_ERC20_ADDRESS, IERC20.abi, wallet1);
     RENBTC = new ethers.Contract(RENBTC_ERC20_ADDRESS, IERC20.abi, wallet1);
+    RTOK = await deployContract(wallet1, RTOKABI, [1000] );
   });
   
   after(async () => {
@@ -107,4 +108,15 @@ describe("Tokens", () => {
     console.log("AUSD: ",ausdBalance2.toString()," XBTC: ",xbtcBalance2.toString());
     console.log("LDOT: ",ldotBalance2.toString()," RENBTC: ",renbtcBalance2.toString());
   });
+
+  it("Custom Token RTOK", async () => {
+    const wAddress1 = await wallet1.getAddress();
+    console.log(wAddress1);
+    const rtokBalance = await RTOK.balanceOf(wAddress1);
+    console.log("RTOK: ",rtokBalance.toString());
+    const rtokAddress = RTOK.address;
+    console.log("RTOK Address : ", rtokAddress);
+    const totalSupply = await RTOK.totalSupply();
+    console.log("Total Supply: ",totalSupply);
+  })
 });
