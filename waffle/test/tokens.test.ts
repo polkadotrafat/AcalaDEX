@@ -75,7 +75,7 @@ describe("Tokens", () => {
     XBTC = new ethers.Contract(XBTC_ERC20_ADDRESS, IERC20.abi, wallet1);
     LDOT = new ethers.Contract(LDOT_ERC20_ADDRESS, IERC20.abi, wallet1);
     RENBTC = new ethers.Contract(RENBTC_ERC20_ADDRESS, IERC20.abi, wallet1);
-    RTOK = await deployContract(wallet1, RTOKABI, [1000] );
+    RTOK = await deployContract(wallet1, RTOKABI, [1000000000000000000000000] );
   });
   
   after(async () => {
@@ -117,6 +117,6 @@ describe("Tokens", () => {
     const rtokAddress = RTOK.address;
     console.log("RTOK Address : ", rtokAddress);
     const totalSupply = await RTOK.totalSupply();
-    console.log("Total Supply: ",totalSupply);
+    console.log("Total Supply: ",totalSupply.toString());
   })
 });
