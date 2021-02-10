@@ -208,9 +208,22 @@ describe("Tokens", () => {
 
     let offerId = await Exchange.getBestOffer(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
 
-    console.log(offerSize.toString());
+    expect(offerSize.toString(),"3");
+    expect(offerId.toString(), "1");
 
-    console.log(offerId.toString());
+    let offers;
+
+        if (parseInt(offerSize.toString()) > 0) {
+            console.log("Order Book");
+            offers = await Exchange.getOfferPerId(offerId);
+            console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
+
+            for(let i = 1; i < parseInt(offerSize.toString()); ++i) {
+                offerId = await Exchange.getPrevOffer(offerId);
+                offers = await Exchange.getOfferPerId(offerId);
+                console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
+            }
+        }
 
   });
 });
