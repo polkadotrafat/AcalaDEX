@@ -227,6 +227,8 @@ describe("Tokens", () => {
 
     // Account 2 creates multiple DOT/ACA orders 
 
+    let Exchange2 = Exchange.connect(wallet2);
+
     sellAmount = "585000000000000000000";
 
     await DOT2.approve(exchangeAddress,sellAmount);
@@ -234,17 +236,17 @@ describe("Tokens", () => {
     sellAmount1 = "300000000000000000000";
     buyAmount1 = "150000000000000000000";
 
-    let txTrade2 = await Exchange.tradeOffer(DOT_ERC20_ADDRESS,sellAmount1,ACA_ERC20_ADDRESS,buyAmount1);
+    let txTrade2 = await Exchange2.tradeOffer(DOT_ERC20_ADDRESS,sellAmount1,ACA_ERC20_ADDRESS,buyAmount1);
 
     sellAmount2 = "160000000000000000000";
     buyAmount2 = "80000000000000000000";
 
-    txTrade2 = await Exchange.tradeOffer(DOT_ERC20_ADDRESS,sellAmount2,ACA_ERC20_ADDRESS,buyAmount2);
+    txTrade2 = await Exchange2.tradeOffer(DOT_ERC20_ADDRESS,sellAmount2,ACA_ERC20_ADDRESS,buyAmount2);
     
     sellAmount3 = "125000000000000000000";
     buyAmount3 = "50000000000000000000";
 
-    txTrade2 = await Exchange.tradeOffer(DOT_ERC20_ADDRESS,sellAmount3,ACA_ERC20_ADDRESS,buyAmount3);
+    txTrade2 = await Exchange2.tradeOffer(DOT_ERC20_ADDRESS,sellAmount3,ACA_ERC20_ADDRESS,buyAmount3);
 
     offerSize = await Exchange.getOfferSize(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
 
