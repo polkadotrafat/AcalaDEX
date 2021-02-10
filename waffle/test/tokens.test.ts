@@ -6,6 +6,7 @@ import { TestAccountSigningKey, Provider, Signer } from "@acala-network/bodhi";
 import { WsProvider } from "@polkadot/api";
 import { createTestPairs } from "@polkadot/keyring/testingPairs";
 import IERC20 from "../build/IERC20.json";
+import RTOKABI from "../build/RTOK.json";
 import DEX from "../build/Dex.json";
 
 use(solidity);
@@ -17,6 +18,7 @@ const DOT_ERC20_ADDRESS = '0x0000000000000000000000000000000000000802';
 const XBTC_ERC20_ADDRESS = '0x0000000000000000000000000000000000000803';
 const LDOT_ERC20_ADDRESS = '0x0000000000000000000000000000000000000804';
 const RENBTC_ERC20_ADDRESS = '0x0000000000000000000000000000000000000805';
+let RTOK_ERC20_ADDRESS = '';
 
 const provider = new Provider({
   provider: new WsProvider("ws://127.0.0.1:9944"),
@@ -60,9 +62,10 @@ describe("Tokens", () => {
   let DOT: Contract;
   let ACA: Contract;
   let AUSD: Contract;
-  let XBTC: Cotract;
+  let XBTC: Contract;
   let LDOT: Contract;
   let RENBTC: Contract;
+  let RTOK: Contract;
   
   before(async () => {
     [wallet1, wallet2] = await getWallets();
