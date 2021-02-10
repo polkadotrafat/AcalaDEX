@@ -75,8 +75,8 @@ describe("Tokens", () => {
     XBTC = new ethers.Contract(XBTC_ERC20_ADDRESS, IERC20.abi, wallet1);
     LDOT = new ethers.Contract(LDOT_ERC20_ADDRESS, IERC20.abi, wallet1);
     RENBTC = new ethers.Contract(RENBTC_ERC20_ADDRESS, IERC20.abi, wallet1);
-    const supply = new BigNumber.from('1000000000000000000000000');
-    RTOK = await deployContract(wallet1, RTOKABI, [1000000000000000000000000] );
+    const supply = BigNumber.from('1000000000000000000000000');
+    RTOK = await deployContract(wallet1, RTOKABI, [supply] );
   });
   
   after(async () => {
@@ -112,12 +112,21 @@ describe("Tokens", () => {
 
   it("Custom Token RTOK", async () => {
     const wAddress1 = await wallet1.getAddress();
-    console.log(wAddress1);
-    const rtokBalance = await RTOK.balanceOf(wAddress1);
-    console.log("RTOK: ",rtokBalance.toString());
+    let rtokBalance = await RTOK.balanceOf(wAddress1);
+    expect(rtokBalance.toString()).to.equal('1000000000000000000000000');
     const rtokAddress = RTOK.address;
-    console.log("RTOK Address : ", rtokAddress);
     const totalSupply = await RTOK.totalSupply();
-    console.log("Total Supply: ",totalSupply.toString());
+    expect(totalSupply.toString()).to.equal('1000000000000000000000000');
+    
+    const amount = BigNumber.from('1000000000000000000000');
+    
+    const wAddress2 = await wallet2.getAddress();
+    
+    const tx = await RTOK.transfer(wAddress2,amount);
+    
+    rtokBalance = await RTOK.balanceOf(wAddress1);
+    expect(rtokBalance.toString()).to.equal('999000000000000000000000');
+    rtokBalance = await RTOK.balanceOf(wAddress2);
+    expect(rtokBalance.toString()).to.equal('1000000000000000000000');
   })
 });
