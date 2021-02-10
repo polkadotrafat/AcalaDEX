@@ -75,6 +75,7 @@ describe("Tokens", () => {
     XBTC = new ethers.Contract(XBTC_ERC20_ADDRESS, IERC20.abi, wallet1);
     LDOT = new ethers.Contract(LDOT_ERC20_ADDRESS, IERC20.abi, wallet1);
     RENBTC = new ethers.Contract(RENBTC_ERC20_ADDRESS, IERC20.abi, wallet1);
+    const supply = new BigNumber.from('1000000000000000000000000');
     RTOK = await deployContract(wallet1, RTOKABI, [1000000000000000000000000] );
   });
   
