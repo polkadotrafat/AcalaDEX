@@ -248,12 +248,45 @@ describe("Tokens", () => {
 
     txTrade2 = await Exchange2.tradeOffer(DOT_ERC20_ADDRESS,sellAmount3,ACA_ERC20_ADDRESS,buyAmount3);
 
+    // Post-Trade Order Books
+
     offerSize = await Exchange.getOfferSize(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
 
     offerId = await Exchange.getBestOffer(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
 
     expect(offerSize.toString(),"1");
     expect(offerId.toString(), "3");
+
+    if (parseInt(offerSize.toString()) > 0) {
+      console.log("Post-Trade ACA/DOT Order Book");
+      offers = await Exchange.getOfferPerId(offerId);
+      console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
+
+      for(let i = 1; i < parseInt(offerSize.toString()); ++i) {
+          offerId = await Exchange.getPrevOffer(offerId);
+          offers = await Exchange.getOfferPerId(offerId);
+          console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
+      }
+    }
+
+    offerSize = await Exchange2.getOfferSize(DOT_ERC20_ADDRESS,ACA_ERC20_ADDRESS);
+
+    offerId = await Exchange2.getBestOffer(DOT_ERC20_ADDRESS,ACA_ERC20_ADDRESS);
+
+    expect(offerSize.toString(),"1");
+    expect(offerId.toString(), "4");
+
+    if (parseInt(offerSize.toString()) > 0) {
+      console.log("Post-Trade DOT/ACA Order Book");
+      offers = await Exchange2.getOfferPerId(offerId);
+      console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
+
+      for(let i = 1; i < parseInt(offerSize.toString()); ++i) {
+          offerId = await Exchange2.getPrevOffer(offerId);
+          offers = await Exchange2.getOfferPerId(offerId);
+          console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
+      }
+  }
 
   });
 });
