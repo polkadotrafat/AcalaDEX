@@ -58,7 +58,7 @@ const getWallets = async () => {
 describe("Tokens", () => {
   let wallet1: Signer;
   let wallet2: Signer;
-  let walletexchange: Signer;
+  let wallet3: Signer;
   let DOT: Contract;
   let ACA: Contract;
   let AUSD: Contract;
@@ -69,7 +69,7 @@ describe("Tokens", () => {
   let Exchange: Contract;
   
   before(async () => {
-    [wallet1, wallet2, walletexchange] = await getWallets();
+    [wallet1, wallet2, wallet3] = await getWallets();
     DOT = new ethers.Contract(DOT_ERC20_ADDRESS, IERC20.abi, wallet1);
     ACA = new ethers.Contract(ACA_ERC20_ADDRESS, IERC20.abi, wallet1);
     AUSD = new ethers.Contract(AUSD_ERC20_ADDRESS, IERC20.abi, wallet1);
@@ -78,7 +78,7 @@ describe("Tokens", () => {
     RENBTC = new ethers.Contract(RENBTC_ERC20_ADDRESS, IERC20.abi, wallet1);
     const supply = BigNumber.from('1000000000000000000000000');
     RTOK = await deployContract(wallet1, RTOKABI, [supply] );
-    Exchange = await deplyContract(walletexchange, DEX);
+    Exchange = await deployContract(wallet1, DEX, [], {gasLimit: 40000000});
   });
   
   after(async () => {
@@ -110,6 +110,18 @@ describe("Tokens", () => {
     console.log("DOT: ",dotBalance2.toString()," ACA: ",acaBalance2.toString());
     console.log("AUSD: ",ausdBalance2.toString()," XBTC: ",xbtcBalance2.toString());
     console.log("LDOT: ",ldotBalance2.toString()," RENBTC: ",renbtcBalance2.toString());
+    
+    const wAddress3 = await wallet3.getAddress();
+    console.log(wAddress3);
+    const dotBalance3 = await DOT.balanceOf(wAddress3);
+    const acaBalance3 = await ACA.balanceOf(wAddress3);
+    const ausdBalance3 = await AUSD.balanceOf(wAddress3);
+    const xbtcBalance3 = await XBTC.balanceOf(wAddress3);
+    const ldotBalance3 = await LDOT.balanceOf(wAddress3);
+    const renbtcBalance3 = await RENBTC.balanceOf(wAddress3);
+    console.log("DOT: ",dotBalance3.toString()," ACA: ",acaBalance3.toString());
+    console.log("AUSD: ",ausdBalance3.toString()," XBTC: ",xbtcBalance3.toString());
+    console.log("LDOT: ",ldotBalance3.toString()," RENBTC: ",renbtcBalance3.toString());
   });
 
   it("Custom Token RTOK", async () => {
@@ -130,14 +142,43 @@ describe("Tokens", () => {
     expect(rtokBalance.toString()).to.equal('999000000000000000000000');
     rtokBalance = await RTOK.balanceOf(wAddress2);
     expect(rtokBalance.toString()).to.equal('1000000000000000000000');
+    
   });
 
   it("Pair Tests", async () => {
     const exchangeAddress = Exchange.address;
 
     const txAddedACA = await Exchange.addToken(ACA_ERC20_ADDRESS,"ACALA","ACA");
-    console.log(txAddedACA);
-    const txAddedDOT = await Exchange.addToken(DOT_ERC20_ADDRESS,"Polkadot","DOT");
-    console.log(txAddedDOT);
+    
+    const txAddedDOT = await Exchange.addToken(DOT_ERC20_ADDRESS,"POLKADOT","DOT");
+    
+    await Exchange.createTokenPair(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
+    
+    let rsCheck = await Exchange.pairList(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
+    expect(rsCheck,true);
+    
+    let rtCheck = await Exchange.pairList(ACA_ERC20_ADDRESS,AUSD_ERC20_ADDRESS);
+    expect(rtCheck,false);
+    
+    // Add a third Token and create a second pair
+    
+    const txAddedRTOK = await Exchange.addToken(RTOK.address,"RTOKEN","RTOK");
+    
+    await Exchange.createTokenPair(ACA_ERC20_ADDRESS,RTOK.address);
+    
+    // Check Total Number of Tokens in the exchange (3)
+    
+    let numTokens = await Exchange.getTotalTokens();
+    expect(numTokens.toString(),'3');
+    
+    // Check Total Number of Trading Pairs in the exchange (2)
+    
+    let numPairs = await Exchange.getTotalPairs();
+    expect(numPairs.toString(),'2');
+  });
+  
+  it("Trading Test", async () => {
+	let numTokens = await Exchange.getTotalTokens();
+	console.log(numTokens.toString());
   });
 });
