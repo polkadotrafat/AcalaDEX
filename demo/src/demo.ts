@@ -4,7 +4,7 @@ import { createTestPairs } from "@polkadot/keyring/testingPairs";
 import { KeyringPair } from "@polkadot/keyring/types";
 import { Contract, ContractFactory, BigNumber } from "ethers";
 import IERC20 from "../artifacts/IERC20.json";
-import DEX from "../artifacts/DEX.json";
+import DEX from "../artifacts/Dex.json";
 
 const WS_URL = process.env.WS_URL || 'ws://127.0.0.1:9944';
 
