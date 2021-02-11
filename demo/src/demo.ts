@@ -10,7 +10,7 @@ const WS_URL = process.env.WS_URL || 'ws://127.0.0.1:9944';
 
 const ACA_ERC20_ADDRESS = '0x0000000000000000000000000000000000000800';
 const DOT_ERC20_ADDRESS = '0x0000000000000000000000000000000000000802';
-
+const UNIT = BigNumber.from('1000000000000000000');
 
 const provider = new Provider({
     provider: new WsProvider(WS_URL),
@@ -59,16 +59,16 @@ const main = async () => {
 
     //Deploy Contracts
 
-    const tokenACA = new Contract(ACA_ERC20_ADDRESS, IERC20.abi, wallet1);
-    const tokenDOT = new Contract(DOT_ERC20_ADDRESS, IERC20.abi, wallet1);
+    const ACA = new Contract(ACA_ERC20_ADDRESS, IERC20.abi, wallet1);
+    const DOT = new Contract(DOT_ERC20_ADDRESS, IERC20.abi, wallet1);
     const Exchange = await ContractFactory.fromSolidity(DEX).connect(wallet1).deploy(address1);
 
     const exchangeAddress = Exchange.address;
 
-    console.log(address1);
-    console.log(address2);
-    
-    console.log(exchangeAddress);
+    console.log("Initial Balances of Address: ",address1);
+    let dotBalance = await DOT.balanceOf(address1);
+    let acaBalance = await ACA.balanceOf(address1);
+    console.log("DOT: ",dotBalance.div(UNIT)," ACA: ",acaBalance.div(UNIT));
 }
 
 main();
