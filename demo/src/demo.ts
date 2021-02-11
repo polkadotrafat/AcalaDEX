@@ -54,8 +54,8 @@ const main = async () => {
 
     [wallet1, wallet2] = await getWallets();
 
-    const address1 = wallet1.getAddress();
-    const address2 = wallet2.getAddress();
+    const address1 = await wallet1.getAddress();
+    const address2 = await wallet2.getAddress();
 
     //Deploy Contracts
 
@@ -68,7 +68,7 @@ const main = async () => {
     console.log("Initial Balances of Address: ",address1);
     let dotBalance = await DOT.balanceOf(address1);
     let acaBalance = await ACA.balanceOf(address1);
-    console.log("DOT: ",dotBalance.div(UNIT)," ACA: ",acaBalance.div(UNIT));
+    console.log("DOT: ",dotBalance.div(UNIT).toNumber()," ACA: ",acaBalance.div(UNIT).toNumber());
 }
 
 main();
