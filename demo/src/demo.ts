@@ -68,7 +68,7 @@ const main = async () => {
     console.log(address1);
     console.log(address2);
     
-    
+    console.log(exchangeAddress);
 }
 
 main();
