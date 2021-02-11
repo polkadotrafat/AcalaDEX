@@ -15,9 +15,6 @@ use(evmChai);
 const ACA_ERC20_ADDRESS = '0x0000000000000000000000000000000000000800';
 const AUSD_ERC20_ADDRESS = '0x0000000000000000000000000000000000000801';
 const DOT_ERC20_ADDRESS = '0x0000000000000000000000000000000000000802';
-const XBTC_ERC20_ADDRESS = '0x0000000000000000000000000000000000000803';
-const LDOT_ERC20_ADDRESS = '0x0000000000000000000000000000000000000804';
-const RENBTC_ERC20_ADDRESS = '0x0000000000000000000000000000000000000805';
 
 const provider = new Provider({
   provider: new WsProvider("ws://127.0.0.1:9944"),
@@ -55,7 +52,7 @@ const getWallets = async () => {
   return wallets;
 };
 
-describe("Tokens", () => {
+describe("Limit Order Tests", () => {
   let wallet1: Signer;
   let wallet2: Signer;
   let DOT: Contract;
@@ -139,16 +136,12 @@ describe("Tokens", () => {
 
     // Check Initial Balances
     const wAddress1 = await wallet1.getAddress();
-    console.log("Initial Balance of Address : ",wAddress1);
     let dotBalance = await DOT.balanceOf(wAddress1);
     let acaBalance = await ACA.balanceOf(wAddress1);
-    console.log("DOT: ",dotBalance.toString()," ACA: ",acaBalance.toString());
 
     const wAddress2 = await wallet2.getAddress();
-    console.log("Initial Balance of Address : ",wAddress2);
     let dotBalance2 = await DOT.balanceOf(wAddress2);
     let acaBalance2 = await ACA.balanceOf(wAddress2);
-    console.log("DOT: ",dotBalance2.toString()," ACA: ",acaBalance2.toString());
 
     let sellAmount = "300000000000000000000";
     let exchangeAddress = Exchange.address;
@@ -180,18 +173,6 @@ describe("Tokens", () => {
     expect(offerId.toString()).to.equal('1');
 
     let offers;
-
-    if (parseInt(offerSize.toString()) > 0) {
-        console.log("ACA/DOT Order Book");
-        offers = await Exchange.getOfferPerId(offerId);
-        console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
-
-        for(let i = 1; i < parseInt(offerSize.toString()); ++i) {
-            offerId = await Exchange.getPrevOffer(offerId);
-            offers = await Exchange.getOfferPerId(offerId);
-            console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
-        }
-    }
 
     // Account 2 creates multiple DOT/ACA orders 
 
@@ -225,18 +206,6 @@ describe("Tokens", () => {
     expect(offerSize.toString()).to.equal('1');
     expect(offerId.toString()).to.equal('3');
 
-    if (parseInt(offerSize.toString()) > 0) {
-      console.log("Post-Trade ACA/DOT Order Book");
-      offers = await Exchange.getOfferPerId(offerId);
-      console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
-
-      for(let i = 1; i < parseInt(offerSize.toString()); ++i) {
-          offerId = await Exchange.getPrevOffer(offerId);
-          offers = await Exchange.getOfferPerId(offerId);
-          console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
-      }
-    }
-
     offerSize = await Exchange2.getOfferSize(DOT_ERC20_ADDRESS,ACA_ERC20_ADDRESS);
 
     offerId = await Exchange2.getBestOffer(DOT_ERC20_ADDRESS,ACA_ERC20_ADDRESS);
@@ -244,17 +213,6 @@ describe("Tokens", () => {
     expect(offerSize.toString()).to.equal('1');
     expect(offerId.toString()).to.equal('4');
 
-    if (parseInt(offerSize.toString()) > 0) {
-      console.log("Post-Trade DOT/ACA Order Book");
-      offers = await Exchange2.getOfferPerId(offerId);
-      console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
-
-      for(let i = 1; i < parseInt(offerSize.toString()); ++i) {
-          offerId = await Exchange2.getPrevOffer(offerId);
-          offers = await Exchange2.getOfferPerId(offerId);
-          console.log(offerId.toString(),offers[0],offers[1].toString(),offers[2],offers[3].toString());
-      }
-    }
 
     // Manually Cancel all the outstanding orders
 
@@ -297,18 +255,6 @@ describe("Tokens", () => {
 
     expect(offerSize.toString()).to.equal('0');
     expect(offerId.toString()).to.equal('0');
-
-    // Check Final Balances
-
-    console.log("Final Balance of Address : ",wAddress1);
-    dotBalance = await DOT.balanceOf(wAddress1);
-    acaBalance = await ACA.balanceOf(wAddress1);
-    console.log("DOT: ",dotBalance.toString()," ACA: ",acaBalance.toString());
-
-    console.log("Final Balance of Address : ",wAddress2);
-    dotBalance2 = await DOT.balanceOf(wAddress2);
-    acaBalance2 = await ACA.balanceOf(wAddress2);
-    console.log("DOT: ",dotBalance2.toString()," ACA: ",acaBalance2.toString());
 
   });
 
