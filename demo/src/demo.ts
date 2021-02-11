@@ -46,6 +46,8 @@ const main = async () => {
     let wallet2: Signer;
 
     [wallet1, wallet2] = await getWallets();
+    console.log(wallet1);
+    console.log(wallet2);
 }
 
 main();
