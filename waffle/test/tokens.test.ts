@@ -336,7 +336,6 @@ describe("Tokens", () => {
 
     expect(offerSize.toString(),"0");
     expect(offerId.toString(), "0");
-    console.log(offerSize.toString());
 
     offerSize = await Exchange2.getOfferSize(DOT_ERC20_ADDRESS,ACA_ERC20_ADDRESS);
 
@@ -344,7 +343,6 @@ describe("Tokens", () => {
 
     expect(offerSize.toString(),"0");
     expect(offerId.toString(), "0");
-    console.log(offerSize.toString());
 
     // Check Final Balances
 
@@ -359,4 +357,58 @@ describe("Tokens", () => {
     console.log("DOT: ",dotBalance2.toString()," ACA: ",acaBalance2.toString());
 
   });
+
+  it("Place and Cancel Orders Test", async () => {
+    let sellAmount = "300000000000000000000";
+    let exchangeAddress = Exchange.address;
+    // Account 1 creates multiple orders of  ACA/DOT transactions
+
+    await ACA.approve(exchangeAddress,sellAmount);
+
+    let sellAmount1 = "100000000000000000000";
+    let buyAmount1 = "150000000000000000000";
+
+    let txTrade1 = await Exchange.tradeOffer(ACA_ERC20_ADDRESS,sellAmount1,DOT_ERC20_ADDRESS,buyAmount1);
+
+    let sellAmount2 = "100000000000000000000";
+    let buyAmount2 = "200000000000000000000";
+
+    txTrade1 = await Exchange.tradeOffer(ACA_ERC20_ADDRESS,sellAmount2,DOT_ERC20_ADDRESS,buyAmount2);
+
+    let sellAmount3 = "100000000000000000000";
+    let buyAmount3 = "250000000000000000000";
+
+    txTrade1 = await Exchange.tradeOffer(ACA_ERC20_ADDRESS,sellAmount3,DOT_ERC20_ADDRESS,buyAmount3);
+
+    let offerSize = await Exchange.getOfferSize(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
+
+    let offerId = await Exchange.getBestOffer(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
+
+    expect(offerSize.toString(),"3");
+    expect(offerId.toString(), "1");
+
+    // Account 1 checks th available orders and cancels them all
+
+    offerSize = await Exchange.getOfferSize(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
+
+    if (parseInt(offerSize.toString()) > 0) {
+      offerId = await Exchange.getBestOffer(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
+      let success = await Exchange.cancelOffer(offerId);
+      console.log(success);
+      for(let i = 1; i < parseInt(offerSize.toString()); ++i) {
+        offerId = await Exchange.getPrevOffer(offerId);
+        success = await Exchange.cancelOffer(offerId);
+        console.log(success);
+      }
+    }
+
+    offerSize = await Exchange.getOfferSize(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
+
+    offerId = await Exchange.getBestOffer(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
+
+    console.log(offerSize.toString());
+    console.log(offerId.toString());
+    expect(offerSize.toString(),"0");
+    expect(offerId.toString(), "0");
+  })
 });
