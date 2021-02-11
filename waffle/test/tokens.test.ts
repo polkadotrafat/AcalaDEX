@@ -159,10 +159,10 @@ describe("Tokens", () => {
     await Exchange.createTokenPair(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
     
     let rsCheck = await Exchange.pairList(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
-    expect(rsCheck,true);
+    expect(rsCheck).to.be.true;
     
     let rtCheck = await Exchange.pairList(ACA_ERC20_ADDRESS,AUSD_ERC20_ADDRESS);
-    expect(rtCheck,false);
+    expect(rtCheck).to.be.false;
     
     // Add a third Token and create a second pair
     
@@ -173,12 +173,12 @@ describe("Tokens", () => {
     // Check Total Number of Tokens in the exchange (3)
     
     let numTokens = await Exchange.getTotalTokens();
-    expect(numTokens.toString(),'3');
+    expect(numTokens.toString()).to.equal('3');
     
     // Check Total Number of Trading Pairs in the exchange (2)
     
     let numPairs = await Exchange.getTotalPairs();
-    expect(numPairs.toString(),'2');
+    expect(numPairs.toString()).to.equal('2');
   });
   
   it("Trading Test", async () => {
@@ -222,8 +222,8 @@ describe("Tokens", () => {
 
     let offerId = await Exchange.getBestOffer(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
 
-    expect(offerSize.toString(),"3");
-    expect(offerId.toString(), "1");
+    expect(offerSize.toString()).to.equal('3');
+    expect(offerId.toString()).to.equal('1');
 
     let offers;
 
@@ -268,8 +268,8 @@ describe("Tokens", () => {
 
     offerId = await Exchange.getBestOffer(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
 
-    expect(offerSize.toString(),"1");
-    expect(offerId.toString(), "3");
+    expect(offerSize.toString()).to.equal('1');
+    expect(offerId.toString()).to.equal('3');
 
     if (parseInt(offerSize.toString()) > 0) {
       console.log("Post-Trade ACA/DOT Order Book");
@@ -287,8 +287,8 @@ describe("Tokens", () => {
 
     offerId = await Exchange2.getBestOffer(DOT_ERC20_ADDRESS,ACA_ERC20_ADDRESS);
 
-    expect(offerSize.toString(),"1");
-    expect(offerId.toString(), "4");
+    expect(offerSize.toString()).to.equal('1');
+    expect(offerId.toString()).to.equal('4');
 
     if (parseInt(offerSize.toString()) > 0) {
       console.log("Post-Trade DOT/ACA Order Book");
@@ -334,15 +334,15 @@ describe("Tokens", () => {
 
     offerId = await Exchange.getBestOffer(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
 
-    expect(offerSize.toString(),"0");
-    expect(offerId.toString(), "0");
+    expect(offerSize.toString()).to.equal('0');
+    expect(offerId.toString()).to.equal('0');
 
     offerSize = await Exchange2.getOfferSize(DOT_ERC20_ADDRESS,ACA_ERC20_ADDRESS);
 
     offerId = await Exchange2.getBestOffer(DOT_ERC20_ADDRESS,ACA_ERC20_ADDRESS);
 
-    expect(offerSize.toString(),"0");
-    expect(offerId.toString(), "0");
+    expect(offerSize.toString()).to.equal('0');
+    expect(offerId.toString()).to.equal('0');
 
     // Check Final Balances
 
@@ -384,8 +384,8 @@ describe("Tokens", () => {
 
     let offerId = await Exchange.getBestOffer(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
 
-    expect(offerSize.toString(),"3");
-    expect(offerId.toString(), "1");
+    expect(offerSize.toString()).to.equal('3');
+    expect(offerId.toString()).to.equal('1');
 
     // Account 1 checks th available orders and cancels them all
 
@@ -404,7 +404,7 @@ describe("Tokens", () => {
 
     offerId = await Exchange.getBestOffer(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
 
-    expect(offerSize.toString(),"0");
-    expect(offerId.toString(), "0");
+    expect(offerSize.toString()).to.equal('0');
+    expect(offerId.toString()).to.equal('0');
   })
 });
