@@ -394,11 +394,9 @@ describe("Tokens", () => {
     if (parseInt(offerSize.toString()) > 0) {
       offerId = await Exchange.getBestOffer(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
       let success = await Exchange.cancelOffer(offerId);
-      console.log(success);
       for(let i = 1; i < parseInt(offerSize.toString()); ++i) {
         offerId = await Exchange.getPrevOffer(offerId);
         success = await Exchange.cancelOffer(offerId);
-        console.log(success);
       }
     }
 
@@ -406,8 +404,6 @@ describe("Tokens", () => {
 
     offerId = await Exchange.getBestOffer(ACA_ERC20_ADDRESS,DOT_ERC20_ADDRESS);
 
-    console.log(offerSize.toString());
-    console.log(offerId.toString());
     expect(offerSize.toString(),"0");
     expect(offerId.toString(), "0");
   })
