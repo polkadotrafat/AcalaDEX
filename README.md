@@ -1,5 +1,28 @@
 # On-chain Decentralized Order Book and Limit Order Matching Engine on Acala
 
+This contract is a simplified and heavily modified version of Maker On-Chain OTC-Market for ERC-20 compatible tokens available [here.](https://github.com/daifoundation/maker-otc). Orderbooks for buy/sell markets are implemented as two double-linked sorted lists. Match Engine tries to match any new offer with existing offers. If there is no match, the new offer is added to the orderbook. At any point in time, the liquidity of the exchange is directly proportional to number of existing offers in the buy/sell markets.
+
+There are two separate folders in this repository. First folder waffle builds and tests contract. Second folder demo already contains contract artifacts and runs a demo of the contract. Both folders require a development Acala Mandala chain. See instructions at [https://github.com/AcalaNetwork/evm-examples](https://github.com/AcalaNetwork/evm-examples)
+
+### Build and Test Contract
+
+```
+cd waffle
+yarn install
+yarn build
+yarn test
+```
+
+### Run Demo
+
+```
+cd demo
+yarn install
+yarn deploy
+```
+
+<img src="img/demo1.jpg" />
+
 ### Matching Engine Function Calls
 
 Create Trade Offer : Exchange Token1 (Sell) for Token2 (Buy).
@@ -31,8 +54,6 @@ getPrevOffer(uint id) public view returns(uint)
 
 
 ### Matching Engine Algorithm
-
-Orderbooks for buy/sell markets are implemented as two double-linked sorted lists. Match Engine tries to match any new offer with existing offers. If there is no match, the new offer is added to the orderbook. At any point in time, the liquidity of the exchange is directly proportional to number of existing offers in the buy/sell markets.
 
 Let `tSellQuantity` be the amount taker is selling.
 Let `tBuyQuantity` is the amount taker is buying.
