@@ -6,7 +6,7 @@ There are two separate folders in this repository. First folder waffle builds an
 
 ### Build and Test Contract
 
-Contract is in the waffle/contracts/ folder (here)[https://github.com/polkadotrafat/AcalaDEX/blob/main/waffle/contracts/DEX.sol]
+Contract is in the waffle/contracts folder [here](https://github.com/polkadotrafat/AcalaDEX/blob/main/waffle/contracts/DEX.sol)
 
 ```
 cd waffle
